@@ -20,7 +20,7 @@ public class CharacterAttack : NetworkBehaviour
 
     private void Update() 
     {
-        if (Input.GetKeyDown(KeyCode.C) && !_playerObservable.IsAttacking)
+        if (Input.GetKeyDown(KeyCode.C) && !_playerObservable.isAttacking)
         {
             StartCoroutine(HandleAttack());
         }
@@ -39,13 +39,13 @@ public class CharacterAttack : NetworkBehaviour
     private IEnumerator HandleAttack()
     {
         _playerObservable.AnimNeedPlay.OnNext(ATTACK_ANIM);;
-        _playerObservable.IsAttacking = true;
+        _playerObservable.isAttacking = true;
         
         SpawnAttackCommand();
 
         yield return new WaitForSeconds(TIME_TO_ATTACK);
         AttackCompleted();
-        _playerObservable.IsAttacking = false;
+        _playerObservable.isAttacking = false;
     }
 
     GameObject _normalAttack;

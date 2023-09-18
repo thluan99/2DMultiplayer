@@ -2,39 +2,38 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using Unity.Collections;
-using Unity.Netcode;
 using UnityEngine;
+using Mirror;
+using UnityEngine.UI;
+using System.Runtime.InteropServices;
 
 public class PlayerHud : NetworkBehaviour
 {
-    private NetworkVariable<FixedString32Bytes> _playerName;
+    [SerializeField] private TextMeshProUGUI _localPlayerOverlay;
+    [SerializeField] private Image _healthBar;
+    private string _playerName;
     private bool _overlaySet = false;
 
-    private void Awake() 
+    [SyncVar(hook = nameof(UpdateHealthBar))]
+    private float _healthBarValue;
+
+    public void SetHealthBarValue(float value)
     {
-        _playerName = new NetworkVariable<FixedString32Bytes>();
+        _healthBarValue = value;
     }
 
-    public override void OnNetworkSpawn()
+    public override void OnStartAuthority()
     {
-        if (IsServer)
-        {
-            _playerName.Value = ("Player " + OwnerClientId);
-        }
+        this.enabled = true;
     }
 
-    public void SetOverlay()
+    public override void OnStopAuthority()
     {
-        var localPlayerOverlay = gameObject.GetComponentInChildren<TextMeshProUGUI>();
-        localPlayerOverlay.SetText(_playerName.Value.ToString());
+        this.enabled = false;
     }
 
-    private void Update() 
+    private void UpdateHealthBar(float oldValue, float newValue)
     {
-        if (!_overlaySet && !string.IsNullOrEmpty(_playerName.Value.ToString()))
-        {
-            SetOverlay();
-            _overlaySet = true;
-        }    
+        _healthBar.fillAmount = newValue;
     }
 }

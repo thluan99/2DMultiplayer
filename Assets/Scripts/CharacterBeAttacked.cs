@@ -7,17 +7,30 @@ using UnityEngine;
 
 public class CharacterBeAttacked : NetworkBehaviour
 {
+    private PlayerHud _playerHud;
     private PlayerObservable _playerObservable;
-    private bool _isAttacked = false;
+    [SyncVar] private float _currentHealth;
+    [SyncVar] private float _maxHealth = 1000;
     private void Awake() 
     {
         _playerObservable = GetComponent<PlayerObservable>();
     }
 
-    [TargetRpc]
-    public void TakeAttacking(NetworkConnectionToClient target, GameObject attackSkill)
+    private void Start() 
     {
-        attackSkill.SetActive(false);
+        _currentHealth = _maxHealth;
+        _playerHud = GetComponentInChildren<PlayerHud>();
+
+        _playerObservable.OnDecreaseHealth
+            .Subscribe(health => DecreaseHealthHandler(health))
+            .AddTo(gameObject);
+    }
+
+    private void DecreaseHealthHandler(float health)
+    {
+        _currentHealth -= health;
+        float healthRatio = _currentHealth / _maxHealth;
+        _playerHud.SetHealthBarValue(healthRatio);
     }
 
     public override void OnStartAuthority()
@@ -28,12 +41,5 @@ public class CharacterBeAttacked : NetworkBehaviour
     public override void OnStopAuthority()
     {
         this.enabled = false;
-    }
-
-    private IEnumerator WaitCooldown()
-    {
-        _isAttacked = true;
-        yield return new WaitForSeconds(0.3f);
-        _isAttacked = false;
     }
 }

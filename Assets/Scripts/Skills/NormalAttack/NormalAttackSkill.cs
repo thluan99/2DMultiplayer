@@ -18,16 +18,21 @@ public class NormalAttackSkill : NetworkBehaviour
     [ServerCallback]
     private void OnTriggerEnter2D(Collider2D other) 
     {
-        if (other.GetComponent<NetworkIdentity>().connectionToClient.connectionId == connectionToClient.connectionId) return;
+        var playerConnectClient = other.GetComponent<NetworkIdentity>().connectionToClient;
+        if (playerConnectClient.connectionId == connectionToClient.connectionId) return;
 
         if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
             Debug.Log("Player: " + other.gameObject.name + " be attacked!");
-            other.GetComponent<CharacterBeAttacked>().TakeAttacking(
-                other.gameObject.GetComponent<NetworkIdentity>().connectionToClient, 
-                this.gameObject
-            );
+            TakeAttacking(playerConnectClient, this.gameObject);
+            other.GetComponent<PlayerObservable>().OnDecreaseHealth.OnNext(100);
         }
 
+    }
+
+    [TargetRpc]
+    public void TakeAttacking(NetworkConnectionToClient target, GameObject skillObject)
+    {
+        skillObject.SetActive(false);
     }
 }

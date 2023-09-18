@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Collections;
-using Unity.Netcode.Components;
 using UnityEngine;
 using Mirror;
 using UnityEngine.UIElements;
@@ -48,6 +47,8 @@ public class CharacterMovement : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!isLocalPlayer) return;
+        
         if (_horizontal != 0)
         {   
             if (!_isMoving)
@@ -61,7 +62,7 @@ public class CharacterMovement : NetworkBehaviour
             else if (_horizontal > 0)
                 SetFlipX(false);
         }
-        else if (_horizontal == 0 && !_playerObservable.IsAttacking)
+        else if (_horizontal == 0 && !_playerObservable.isAttacking)
         {
             _isMoving = false;
             _playerObservable.AnimNeedPlay.OnNext(IDLE);
