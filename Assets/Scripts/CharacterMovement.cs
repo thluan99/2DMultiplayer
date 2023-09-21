@@ -13,7 +13,6 @@ public class CharacterMovement : NetworkBehaviour
     private float _horizontal;
     private Rigidbody2D _rigid;
     private float _speed = 8f;
-    private bool _isMoving = false;
     private Animator _animator;
     private SpriteRenderer _spriteRenderer;
     private PlayerObservable _playerObservable;
@@ -51,11 +50,7 @@ public class CharacterMovement : NetworkBehaviour
         
         if (_horizontal != 0)
         {   
-            if (!_isMoving)
-            {
-                _isMoving = true;
-                _playerObservable.AnimNeedPlay.OnNext(WALK);
-            }
+            _playerObservable.AnimNeedPlay.OnNext(WALK);
 
             if (_horizontal < 0)
                 SetFlipX(true);
@@ -64,7 +59,6 @@ public class CharacterMovement : NetworkBehaviour
         }
         else if (_horizontal == 0 && !_playerObservable.isAttacking)
         {
-            _isMoving = false;
             _playerObservable.AnimNeedPlay.OnNext(IDLE);
         }
     }

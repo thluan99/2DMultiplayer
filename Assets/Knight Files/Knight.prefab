@@ -151,7 +151,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4296799716997038445
 Transform:
   m_ObjectHideFlags: 0
@@ -228,6 +228,7 @@ GameObject:
   - component: {fileID: 4453503657305827996}
   - component: {fileID: 4419492021544768076}
   - component: {fileID: -5354052564878201253}
+  - component: {fileID: 7114082280062353991}
   - component: {fileID: 8298185917543888991}
   - component: {fileID: 1225569380170817596}
   - component: {fileID: -3453624277654581977}
@@ -433,9 +434,24 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3670379350247653922}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 88cda713946561c4680a4dcc9c00aa9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+--- !u!114 &7114082280062353991
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3670379350247653922}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 808859d80beaf5e4b9c3ed927bba3551, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   syncDirection: 0

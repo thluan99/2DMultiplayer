@@ -12,7 +12,6 @@ public class PlayerHud : NetworkBehaviour
     [SerializeField] private TextMeshProUGUI _localPlayerOverlay;
     [SerializeField] private Image _healthBar;
     private string _playerName;
-    private bool _overlaySet = false;
 
     [SyncVar(hook = nameof(UpdateHealthBar))]
     private float _healthBarValue;
