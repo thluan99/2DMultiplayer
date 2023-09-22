@@ -65,7 +65,15 @@ public class CharacterMovement : NetworkBehaviour
 
     private void FixedUpdate() 
     {
-        _horizontal = Input.GetAxis("Horizontal");
+        if (DialogueManager.Instance.IsDialoguePlaying) 
+        {
+            _horizontal = 0;
+        }
+        else
+        {
+            _horizontal = Input.GetAxis("Horizontal");
+        }
+
         _rigid.velocity = new Vector2(_horizontal * _speed, _rigid.velocity.y);
     }
 
