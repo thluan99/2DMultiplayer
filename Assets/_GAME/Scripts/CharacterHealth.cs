@@ -5,7 +5,7 @@ using Mirror;
 using UniRx;
 using UnityEngine;
 
-public class CharacterBeAttacked : NetworkBehaviour
+public class CharacterHealth : NetworkBehaviour
 {
     private PlayerHud _playerHud;
     private PlayerObservable _playerObservable;

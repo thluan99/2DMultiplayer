@@ -1,8 +1,9 @@
 -> start
 
 === start ===
-Hi, I am Adam, Can I help you ?
-I have many type of weapon. What do you want ?
+Hi, I am Adam, Can I help you ? #speaker:Adam #avatar:Adam
+Hello, I am David. #speaker:David #avatar:David
+I have many type of weapon. What do you want ? #speaker:Adam #avatar:Adam
  + [Gun] -> gun
  + [Sword] -> sword
     

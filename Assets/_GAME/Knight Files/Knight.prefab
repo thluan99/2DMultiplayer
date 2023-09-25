@@ -222,14 +222,14 @@ GameObject:
   - component: {fileID: 7893619520676768957}
   - component: {fileID: 3670379350247653927}
   - component: {fileID: 3670379350247653926}
+  - component: {fileID: -2709634218792665050}
   - component: {fileID: 3670379350247653928}
   - component: {fileID: 3412560733998690023}
   - component: {fileID: 8222158627429295186}
   - component: {fileID: 4453503657305827996}
   - component: {fileID: 4419492021544768076}
-  - component: {fileID: -5354052564878201253}
   - component: {fileID: 7114082280062353991}
-  - component: {fileID: 2753453768500378208}
+  - component: {fileID: 3831070290299047942}
   - component: {fileID: 8298185917543888991}
   - component: {fileID: 1225569380170817596}
   - component: {fileID: -3453624277654581977}
@@ -346,6 +346,21 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
+--- !u!114 &-2709634218792665050
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3670379350247653922}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9458fa679fb8dd488f0b0d02d20644e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
 --- !u!114 &3670379350247653928
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -428,21 +443,6 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
---- !u!114 &-5354052564878201253
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3670379350247653922}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 88cda713946561c4680a4dcc9c00aa9b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncDirection: 0
-  syncMode: 0
-  syncInterval: 0
 --- !u!114 &7114082280062353991
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -458,18 +458,21 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
---- !u!114 &2753453768500378208
+--- !u!114 &3831070290299047942
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3670379350247653922}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 97d3597e222f016428b79f58e3891e9e, type: 3}
+  m_Script: {fileID: 11500000, guid: 88cda713946561c4680a4dcc9c00aa9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
 --- !u!114 &8298185917543888991
 MonoBehaviour:
   m_ObjectHideFlags: 0

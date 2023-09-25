@@ -8,12 +8,10 @@ public class CharacterAttack : NetworkBehaviour
     [SerializeField] private GameObject _normalAttackSkill;
     private const string ATTACK_ANIM = "Attack";
     private const float TIME_TO_ATTACK = 0.3F;
-    private Animator _animator;
     private PlayerObservable _playerObservable;
     private SpriteRenderer _spriteRenderer;
     private void Awake() 
     {
-        _animator = GetComponent<Animator>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _playerObservable = GetComponent<PlayerObservable>();
     }

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Mirror;
 using UniRx;
 using UnityEngine;
 
@@ -42,7 +43,6 @@ public class PlayerInteract : MonoBehaviour
         _currentInteractableSelect = colliders[colliders.Count - 1].GetComponent<DialogueTrigger>();
         _currentInteractableSelect.SetInteractable(true);
     }
-
 
     private void OnTriggerEnter2D(Collider2D other) 
     {

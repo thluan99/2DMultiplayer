@@ -10,9 +10,14 @@ using UnityEngine.UI;
 
 public class DialogueManager : MonoBehaviour
 {
+    private const string SPEAKER_TAG = "speaker";
+    private const string AVATAR_TAG = "avatar";
+
     [Header("Dialogue UI")]
     [SerializeField] private GameObject _dialoguePanel;
     [SerializeField] private TextMeshProUGUI _dialogueText;
+    [SerializeField] private TextMeshProUGUI _displayNameText;
+    [SerializeField] private Animator _avatarAnimator;
     [SerializeField] private GameObject[] _choices;
     private TextMeshProUGUI[] _choiceTexts;
     private Story _currentStory;
@@ -68,6 +73,9 @@ public class DialogueManager : MonoBehaviour
         IsDialoguePlaying = true;
         _dialoguePanel.SetActive(true);
 
+        _displayNameText.SetText("???");
+        _avatarAnimator.Play("default");
+
         ContinueStory();
     }
 
@@ -78,10 +86,38 @@ public class DialogueManager : MonoBehaviour
             _dialogueText.SetText(_currentStory.Continue());
 
             DisplayChoices();
+            HandleTags(_currentStory.currentTags);
         }
         else
         {
             ExitDialogueMode();
+        }
+    }
+
+    private void HandleTags(List<string> tags)
+    {
+        foreach (string tag in tags)
+        {
+            string[] splitTag = tag.Split(':');
+            if (splitTag.Length != 2)
+            {
+                Debug.LogError("Tag error: " + tag);
+            }
+            string tagKey = splitTag[0].Trim();
+            string tagValue = splitTag[1].Trim();
+
+            switch (tagKey)
+            {
+                case SPEAKER_TAG:
+                    _displayNameText.SetText(tagValue);
+                    break;
+                case AVATAR_TAG:
+                    _avatarAnimator.Play(tagValue);
+                    break;
+                default:
+                    Debug.LogWarning("Tag key not handle! " + tagKey);
+                    break;
+            }
         }
     }
 
