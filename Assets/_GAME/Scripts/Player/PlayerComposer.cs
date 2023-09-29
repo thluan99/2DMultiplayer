@@ -18,8 +18,6 @@ public class PlayerComposer : NetworkBehaviour
 
     public override void OnStartClient()
     {
-        base.OnStartClient();
-
         if (!isLocalPlayer) return;
 
         AddPlayerInteract();

@@ -5,7 +5,7 @@ using Mirror;
 using UniRx;
 using UnityEngine;
 
-public class CharacterHealth : NetworkBehaviour
+public class CharacterHealth : NetworkBehaviour, IHeath
 {
     private PlayerHud _playerHud;
     private PlayerObservable _playerObservable;
@@ -20,13 +20,9 @@ public class CharacterHealth : NetworkBehaviour
     {
         _currentHealth = _maxHealth;
         _playerHud = GetComponentInChildren<PlayerHud>();
-
-        _playerObservable.OnDecreaseHealth
-            .Subscribe(health => DecreaseHealthHandler(health))
-            .AddTo(gameObject);
     }
 
-    private void DecreaseHealthHandler(float health)
+    public void TakeDamage(float health)
     {
         _currentHealth -= health;
         float healthRatio = _currentHealth / _maxHealth;

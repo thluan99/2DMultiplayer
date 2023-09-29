@@ -10,6 +10,9 @@ public class DialogueTrigger : MonoBehaviour
     [Header("Ink JSON")]
     [SerializeField] private TextAsset _inkJson;
 
+    [Header("Emote Animator")]
+    [SerializeField] private Animator _emoteAnimator;
+
     [Header("Visual Cube")]
     [SerializeField] private GameObject _visualCube;
     private ReactiveProperty<bool> _interactable;
@@ -31,6 +34,7 @@ public class DialogueTrigger : MonoBehaviour
 
     public void ShowInteract()
     {
-        DialogueManager.Instance.EnterDialogueMode(_inkJson);
+        DialogueManager.Instance.EnterDialogueMode(_inkJson, _emoteAnimator);
+        SetInteractable(false);
     }
 }

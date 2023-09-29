@@ -1,4 +1,6 @@
--> start
+INCLUDE Global.ink
+
+{ type_gun_name == "" : -> start | -> already_chose }
 
 === start ===
 Hi, I am Adam, Can I help you ? #speaker:Adam #avatar:Adam
@@ -22,5 +24,10 @@ Some sword type!
 -> END
 
 === chosen(type) ===
+~ type_gun_name = type
 You choose {type}. Good luck!
+-> END
+
+=== already_chose ===
+You already chose {type_gun_name}.
 -> END

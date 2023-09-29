@@ -13,36 +13,46 @@ public class DialogueManager : MonoBehaviour
     private const string SPEAKER_TAG = "speaker";
     private const string AVATAR_TAG = "avatar";
 
+    [Header("Params")]
+    [SerializeField] private float _typingSpeed = 0.04f;
+
+    [Header("Load globalJson")]
+    [SerializeField] private TextAsset _loadGlobalJson;
+
     [Header("Dialogue UI")]
     [SerializeField] private GameObject _dialoguePanel;
     [SerializeField] private TextMeshProUGUI _dialogueText;
     [SerializeField] private TextMeshProUGUI _displayNameText;
+    [SerializeField] private GameObject _continueIcon;
     [SerializeField] private Animator _avatarAnimator;
     [SerializeField] private GameObject[] _choices;
     private TextMeshProUGUI[] _choiceTexts;
     private Story _currentStory;
+    private bool _canContinueToNextLine = false;
+    private DialogueVariables _dialogueVariables;
     public bool IsDialoguePlaying { get; private set; }
     private static DialogueManager _instance;
-
     public static DialogueManager Instance => _instance;
 
-    private void Awake() 
+    private void Awake()
     {
         if (_instance != null)
         {
             Debug.LogWarning("Found more than one Dialogue Manager in the scene!");
         }
         _instance = this;
+
+        _dialogueVariables = new DialogueVariables(_loadGlobalJson);
     }
 
-    private void Start() 
+    private void Start()
     {
         IsDialoguePlaying = false;
         _dialoguePanel.SetActive(false);
         _choiceTexts = new TextMeshProUGUI[_choices.Length];
 
         Observable.EveryUpdate()
-            .Where(_ => HasContinueStoryInput() && 
+            .Where(_ => HasContinueStoryInput() && _canContinueToNextLine &&
                 IsDialoguePlaying && _currentStory.currentChoices.Count == 0)
             .Subscribe(_ => ContinueStory())
             .AddTo(gameObject);
@@ -52,8 +62,8 @@ public class DialogueManager : MonoBehaviour
 
     private bool HasContinueStoryInput()
     {
-        return Input.GetKeyDown(KeyCode.Space) || 
-            Input.GetMouseButtonDown(0) || 
+        return Input.GetKeyDown(KeyCode.Space) ||
+            Input.GetMouseButtonDown(0) ||
             Input.GetKeyDown(KeyCode.Return);
     }
 
@@ -67,11 +77,20 @@ public class DialogueManager : MonoBehaviour
         }
     }
 
-    public void EnterDialogueMode(TextAsset inkJson)
+    public void EnterDialogueMode(TextAsset inkJson, Animator emoteAnimator)
     {
         _currentStory = new Story(inkJson.text);
         IsDialoguePlaying = true;
         _dialoguePanel.SetActive(true);
+
+        _dialogueVariables.StartListening(_currentStory);
+        _currentStory.BindExternalFunction("playEmote", (string emoteName) => {
+            Debug.Log(emoteName);
+            if (emoteAnimator != null)
+            {
+                emoteAnimator.Play(emoteName);
+            }
+        });
 
         _displayNameText.SetText("???");
         _avatarAnimator.Play("default");
@@ -83,15 +102,51 @@ public class DialogueManager : MonoBehaviour
     {
         if (_currentStory.canContinue)
         {
-            _dialogueText.SetText(_currentStory.Continue());
+            if (_displayLineCoroutine != null)
+                StopCoroutine(_displayLineCoroutine);
 
-            DisplayChoices();
+            _displayLineCoroutine = StartCoroutine(DisplayLine(_currentStory.Continue()));
+
             HandleTags(_currentStory.currentTags);
         }
         else
         {
             ExitDialogueMode();
         }
+    }
+
+    Coroutine _displayLineCoroutine;
+    private IEnumerator DisplayLine(string line)
+    {
+        _dialogueText.SetText(line);
+        _dialogueText.maxVisibleCharacters = 0;
+        _canContinueToNextLine = false;
+        _continueIcon.SetActive(false);
+        HideChoices();
+
+        bool isEndOfLine = false;
+        IDisposable trackingInput = Observable.EveryUpdate()
+            .First(_ => HasContinueStoryInput())
+            .Subscribe(_ =>
+            {
+                _dialogueText.maxVisibleCharacters = line.Length;
+                isEndOfLine = true;
+            }).AddTo(gameObject);
+
+        foreach (char letter in line.ToCharArray())
+        {
+            if (isEndOfLine)
+                break;
+
+            _dialogueText.maxVisibleCharacters++;
+            yield return new WaitForSeconds(_typingSpeed);
+        }
+        trackingInput.Dispose();
+
+        DisplayChoices();
+        _canContinueToNextLine = true;
+        _continueIcon.SetActive(true);
+
     }
 
     private void HandleTags(List<string> tags)
@@ -123,9 +178,20 @@ public class DialogueManager : MonoBehaviour
 
     private void ExitDialogueMode()
     {
+        _dialogueVariables.StopListening(_currentStory);
+        _currentStory.UnbindExternalFunction("playEmote");
+
         IsDialoguePlaying = false;
         _dialoguePanel.SetActive(false);
         _dialogueText.SetText("");
+    }
+
+    private void HideChoices()
+    {
+        foreach (GameObject choice in _choices)
+        {
+            choice.SetActive(false);
+        }
     }
 
     private void DisplayChoices()
@@ -155,7 +221,8 @@ public class DialogueManager : MonoBehaviour
 
     private void OnMakeChoice(int index)
     {
-        _currentStory.ChooseChoiceIndex(index);
+        if (_canContinueToNextLine)
+            _currentStory.ChooseChoiceIndex(index);
     }
 
     private IEnumerator SelectFirstChoice()
@@ -163,5 +230,21 @@ public class DialogueManager : MonoBehaviour
         EventSystem.current.SetSelectedGameObject(null);
         yield return new WaitForEndOfFrame();
         EventSystem.current.SetSelectedGameObject(_choices[0].gameObject);
+    }
+
+    public Ink.Runtime.Object GetVariableState(string variableName)
+    {
+        Ink.Runtime.Object variableValue = null;
+        _dialogueVariables.Variables.TryGetValue(variableName, out variableValue);
+        if (variableValue == null)
+        {
+            Debug.LogWarning(variableName + " was found to be null");
+        }
+        return variableValue;
+    }
+
+    private void OnApplicationQuit() 
+    {
+        _dialogueVariables.SaveVariable();
     }
 }

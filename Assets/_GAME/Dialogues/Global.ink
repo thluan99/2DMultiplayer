@@ -1,0 +1,1 @@
+VAR type_gun_name = ""

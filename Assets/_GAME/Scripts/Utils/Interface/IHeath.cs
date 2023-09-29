@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DialogueObservable : MonoBehaviour
+public interface IHeath
 {
-    
+    public void TakeDamage(float value);
 }

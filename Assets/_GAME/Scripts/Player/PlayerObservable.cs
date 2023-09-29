@@ -7,16 +7,12 @@ using Mirror;
 
 public class PlayerObservable : NetworkBehaviour
 {
-    public Subject<Unit> OnBeNormalAttacked;
     public bool isAttacking = false;
     public Subject<string> AnimNeedPlay;
-    public Subject<float> OnDecreaseHealth;
 
     private void Awake() 
     {
-        OnBeNormalAttacked = new Subject<Unit>();
         AnimNeedPlay = new Subject<string>();
-        OnDecreaseHealth = new Subject<float>();
     }
 
     public override void OnStartAuthority()
