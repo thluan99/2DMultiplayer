@@ -473,6 +473,7 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
+  _playerHud: {fileID: 6170106463731630225}
 --- !u!114 &8298185917543888991
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -55,6 +55,7 @@ public class CharacterAttack : NetworkBehaviour
         NetworkServer.Spawn(_normalAttack, connectionToClient);
         _normalAttack.transform.localScale = new Vector3(_spriteRenderer.flipX == false ? 1 : -1, 1, 1);
         _normalAttack.transform.position = transform.position;
+        _normalAttack.GetComponent<NormalAttackSkill>().ObjectId = connectionToClient.connectionId;
     }
 
     [Command]

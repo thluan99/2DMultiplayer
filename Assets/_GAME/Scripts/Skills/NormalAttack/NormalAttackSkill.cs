@@ -1,12 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using Mirror;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class NormalAttackSkill : NetworkBehaviour
 {
     private const float SKILL_DAMAGE = 100;
+    [SerializeField] private LayerMask _canAttackLayer;
+
+    public int ObjectId;
+
     public override void OnStartAuthority()
     {
         this.enabled = true;
@@ -20,18 +23,21 @@ public class NormalAttackSkill : NetworkBehaviour
     [ServerCallback]
     private void OnTriggerEnter2D(Collider2D other) 
     {
-        var otherConnectClient = other.GetComponent<NetworkIdentity>().connectionToClient;
+        var otherNetworkId = other.GetComponent<NetworkIdentity>();
 
-        if (otherConnectClient.connectionId == connectionToClient.connectionId) return;
+        if (otherNetworkId.connectionToClient != null)
+        {
+            Debug.Log("otherNetworkIdconnectionToClient.connectionId " + otherNetworkId.connectionToClient.connectionId  + " ObjectId: " + ObjectId);
+            if (otherNetworkId.connectionToClient.connectionId == ObjectId) return;
+        }
 
-        if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
+        if ((_canAttackLayer.value & (1 << other.gameObject.layer)) > 0)
         {
             Debug.Log(other.gameObject.name + " be attacked!");
             
-            TakeAttacking(otherConnectClient, this.gameObject);
-            other.GetComponent<IHeath>().TakeDamage(SKILL_DAMAGE);
+            TakeAttacking(otherNetworkId.connectionToClient, this.gameObject);
+            other.GetComponent<IHeath>()?.TakeDamage(SKILL_DAMAGE);
         }
-
     }
 
     [TargetRpc]

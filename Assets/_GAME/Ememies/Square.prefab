@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: -6503602102467066081}
   - component: {fileID: 8077542468383611126}
   - component: {fileID: 1175853637924210135}
+  - component: {fileID: 351337754059754773}
   m_Layer: 7
   m_Name: Square
   m_TagString: Enemy
@@ -187,6 +188,22 @@ MonoBehaviour:
   positionSensitivity: 0.01
   rotationSensitivity: 0.01
   scaleSensitivity: 0.01
+--- !u!114 &351337754059754773
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 551086893266248479}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88cda713946561c4680a4dcc9c00aa9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+  _playerHud: {fileID: 1205748760520270103}
 --- !u!1 &1227761903207772638
 GameObject:
   m_ObjectHideFlags: 0
@@ -199,6 +216,7 @@ GameObject:
   - component: {fileID: 1642897238994470739}
   - component: {fileID: 5657895845261492900}
   - component: {fileID: 1420154474676960514}
+  - component: {fileID: 1205748760520270103}
   m_Layer: 3
   m_Name: Canvas
   m_TagString: Untagged
@@ -288,6 +306,23 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &1205748760520270103
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1227761903207772638}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c99452c39724e5f4fb1d2a7de696692e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+  _localPlayerOverlay: {fileID: 0}
+  _healthBar: {fileID: 9123873118206650227}
 --- !u!1 &2966847510744860880
 GameObject:
   m_ObjectHideFlags: 0
