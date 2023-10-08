@@ -5,6 +5,7 @@ using UnityEngine;
 using Mirror;
 using UnityEngine.UIElements;
 using System;
+using UniRx;
 
 public class CharacterMovement : NetworkBehaviour
 {
@@ -31,6 +32,30 @@ public class CharacterMovement : NetworkBehaviour
     void Start()
     {
         transform.position = new Vector3(transform.position.x, transform.position.y + 2f);
+
+        if (!isLocalPlayer) return;
+
+        _playerObservable.HorizontalInput
+            .Where(horizontal => horizontal < 0)
+            .Subscribe(horizontal => {
+                _playerObservable.AnimNeedPlay.OnNext(WALK);
+                _rigid.velocity = new Vector2(horizontal * _speed, _rigid.velocity.y);
+                SetFlipX(true);
+            }).AddTo(gameObject);
+        
+        _playerObservable.HorizontalInput
+            .Where(horizontal => horizontal > 0)
+            .Subscribe(horizontal => {
+                _playerObservable.AnimNeedPlay.OnNext(WALK);
+                _rigid.velocity = new Vector2(horizontal * _speed, _rigid.velocity.y);
+                SetFlipX(false);
+            }).AddTo(gameObject);
+        
+        _playerObservable.HorizontalInput
+            .Where(horizontal => horizontal == 0 && !_playerObservable.isAttacking)
+            .Subscribe(_ => {
+                _playerObservable.AnimNeedPlay.OnNext(IDLE);
+            }).AddTo(gameObject);
     }
 
     public override void OnStartAuthority()
@@ -41,40 +66,6 @@ public class CharacterMovement : NetworkBehaviour
     public override void OnStopAuthority()
     {
         this.enabled = false;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        if (!isLocalPlayer) return;
-        
-        if (_horizontal != 0)
-        {   
-            _playerObservable.AnimNeedPlay.OnNext(WALK);
-
-            if (_horizontal < 0)
-                SetFlipX(true);
-            else if (_horizontal > 0)
-                SetFlipX(false);
-        }
-        else if (_horizontal == 0 && !_playerObservable.isAttacking)
-        {
-            _playerObservable.AnimNeedPlay.OnNext(IDLE);
-        }
-    }
-
-    private void FixedUpdate() 
-    {
-        if (DialogueManager.Instance.IsDialoguePlaying) 
-        {
-            _horizontal = 0;
-        }
-        else
-        {
-            _horizontal = Input.GetAxis("Horizontal");
-        }
-
-        _rigid.velocity = new Vector2(_horizontal * _speed, _rigid.velocity.y);
     }
 
     private void FlipSpriteRenderer(bool oldValue, bool newValue)

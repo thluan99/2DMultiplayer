@@ -4,6 +4,7 @@ using UniRx;
 using Unity.Collections;
 using UnityEngine;
 using Mirror;
+using System;
 
 public class PlayerObservable : NetworkBehaviour
 {
@@ -14,6 +15,9 @@ public class PlayerObservable : NetworkBehaviour
     {
         AnimNeedPlay = new Subject<string>();
     }
+
+    public IObservable<float> HorizontalInput => Observable.EveryFixedUpdate()
+        .Select(_ => DialogueManager.Instance.IsDialoguePlaying ? 0 : Input.GetAxis("Horizontal"));
 
     public override void OnStartAuthority()
     {

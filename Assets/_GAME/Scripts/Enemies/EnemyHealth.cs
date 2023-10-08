@@ -1,33 +1,25 @@
-using System;
 using System.Collections;
+using System.Collections.Generic;
 using Mirror;
-using Mirror.Examples.Benchmark;
-using UniRx;
 using UnityEngine;
+using UniRx;
 
-public class CharacterHealth : NetworkBehaviour, IHeath
+public class EnemyHealth : NetworkBehaviour, IHeath
 {
     [SerializeField] private PlayerHud _playerHud;
     [SyncVar(hook = nameof(CheckCurrentHealth))] private float _currentHealth;
     [SyncVar] private float _maxHealth;
-    private PlayerObservable _playerObservable;
-
-    private void Awake() 
-    {
-        _playerObservable = GetComponent<PlayerObservable>();
-    }
 
     private void Start() 
     {
-        ConfigHealthCommand();
+        ConfigHealthServer();
     }
 
-    [Command]
-    private void ConfigHealthCommand()
+    [Server]
+    private void ConfigHealthServer()
     {
         _maxHealth = 1000;
         _currentHealth = _maxHealth;
-        Debug.Log(_currentHealth + " / " + _maxHealth);
     }
 
     private void CheckCurrentHealth(float prev, float newValue)
@@ -35,14 +27,12 @@ public class CharacterHealth : NetworkBehaviour, IHeath
         if (newValue == 0)
         {
             Debug.Log("Die!");
-            _playerObservable.AnimNeedPlay.OnNext("Die");
-            gameObject.GetComponent<CharacterMovement>().enabled = false;
         }
     }
 
     public void TakeDamage(float health)
     {
-        Debug.Log("Take damage: " + health + " _currentHealth: " + _currentHealth + " / " + _maxHealth);
+        Debug.Log("Enemy Take damage: " + health + " _currentHealth: " + _currentHealth + " / " + _maxHealth);
         _currentHealth -= health;
         float healthRatio = _currentHealth / _maxHealth;
         _playerHud.SetHealthBarValue(healthRatio);

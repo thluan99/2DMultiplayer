@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: -6503602102467066081}
   - component: {fileID: 8077542468383611126}
   - component: {fileID: 1175853637924210135}
-  - component: {fileID: 351337754059754773}
+  - component: {fileID: -2686411464938960810}
   m_Layer: 7
   m_Name: Square
   m_TagString: Enemy
@@ -188,7 +188,7 @@ MonoBehaviour:
   positionSensitivity: 0.01
   rotationSensitivity: 0.01
   scaleSensitivity: 0.01
---- !u!114 &351337754059754773
+--- !u!114 &-2686411464938960810
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -197,7 +197,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 551086893266248479}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 88cda713946561c4680a4dcc9c00aa9b, type: 3}
+  m_Script: {fileID: 11500000, guid: 04312eed3d5c6d646867e20735d52cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   syncDirection: 0
