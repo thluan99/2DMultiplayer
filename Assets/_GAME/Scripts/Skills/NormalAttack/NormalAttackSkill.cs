@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using Mirror;
 using UnityEngine;
 
-public class NormalAttackSkill : NetworkBehaviour
+public class NormalAttackSkill : AttackSkill
 {
-    private const float SKILL_DAMAGE = 100;
-    [SerializeField] private LayerMask _canAttackLayer;
-
-    public int ObjectId;
+    public override void InitInflictDamageType()
+    {
+        _inflictDamageType = new OneTimeDamage();
+    }
 
     public override void OnStartAuthority()
     {
@@ -34,13 +34,13 @@ public class NormalAttackSkill : NetworkBehaviour
         {
             Debug.Log(other.gameObject.name + " be attacked!");
             
-            TakeAttacking(otherNetworkId.connectionToClient, this.gameObject);
-            other.GetComponent<IHeath>().TakeDamage(SKILL_DAMAGE);
+            AttackTo(otherNetworkId.connectionToClient, this.gameObject);
+            _inflictDamageType.InflictDamage(other.gameObject, _skillDamges);
         }
     }
 
     [TargetRpc]
-    public void TakeAttacking(NetworkConnectionToClient target, GameObject skillObject)
+    public override void AttackTo(NetworkConnectionToClient target, GameObject skillObject)
     {
         skillObject.SetActive(false);
     }

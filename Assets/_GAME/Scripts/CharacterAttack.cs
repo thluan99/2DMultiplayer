@@ -7,6 +7,7 @@ using UniRx.Triggers;
 public class CharacterAttack : NetworkBehaviour
 {
     [SerializeField] private GameObject _normalAttackSkill;
+    [SerializeField] private GameObject _swordRainAttackSkill;
     private const string ATTACK_ANIM = "Attack";
     private const float TIME_TO_ATTACK = 0.3F;
     private PlayerObservable _playerObservable;
@@ -21,7 +22,11 @@ public class CharacterAttack : NetworkBehaviour
     {
         if (Input.GetKeyDown(KeyCode.C) && !_playerObservable.isAttacking)
         {
-            StartCoroutine(HandleAttack());
+            StartCoroutine(HandleAttack(_normalAttackSkill));
+        }
+        else if (Input.GetKeyDown(KeyCode.V) && !_playerObservable.isAttacking)
+        {
+            StartCoroutine(HandleAttack(_swordRainAttackSkill));
         }
     }
 
@@ -35,33 +40,33 @@ public class CharacterAttack : NetworkBehaviour
         this.enabled = false;
     }
 
-    private IEnumerator HandleAttack()
+    private IEnumerator HandleAttack(GameObject attackPrefab)
     {
         _playerObservable.AnimNeedPlay.OnNext(ATTACK_ANIM);;
         _playerObservable.isAttacking = true;
-        
-        SpawnAttackCommand();
+
+        SpawnAttackCommand(attackPrefab);
 
         yield return new WaitForSeconds(TIME_TO_ATTACK);
         AttackCompleted();
         _playerObservable.isAttacking = false;
     }
 
-    GameObject _normalAttack;
+    GameObject attackObject;
     [Command]
-    private void SpawnAttackCommand()
+    private void SpawnAttackCommand(GameObject attackPrefab)
     {
-        _normalAttack = Instantiate(_normalAttackSkill);
-        NetworkServer.Spawn(_normalAttack, connectionToClient);
-        _normalAttack.transform.localScale = new Vector3(_spriteRenderer.flipX == false ? 1 : -1, 1, 1);
-        _normalAttack.transform.position = transform.position;
-        _normalAttack.GetComponent<NormalAttackSkill>().ObjectId = connectionToClient.connectionId;
+        attackObject = Instantiate(_swordRainAttackSkill);
+        NetworkServer.Spawn(attackObject, connectionToClient);
+        attackObject.transform.localScale = new Vector3(_spriteRenderer.flipX == false ? 1 : -1, 1, 1);
+        attackObject.transform.position = transform.position;
+        attackObject.GetComponent<AttackSkill>().ObjectId = connectionToClient.connectionId;
     }
 
     [Command]
     private void AttackCompleted()
     {
-        NetworkServer.Destroy(_normalAttack);
-        _normalAttack = null;
+        NetworkServer.Destroy(attackObject);
+        attackObject = null;
     }
 }

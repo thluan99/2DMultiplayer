@@ -36,7 +36,7 @@ public class CharacterMovement : NetworkBehaviour
         if (!isLocalPlayer) return;
 
         _playerObservable.HorizontalInput
-            .Where(horizontal => horizontal < 0)
+            .Where(horizontal => horizontal < 0 && !_playerObservable.isAttacking)
             .Subscribe(horizontal => {
                 _playerObservable.AnimNeedPlay.OnNext(WALK);
                 _rigid.velocity = new Vector2(horizontal * _speed, _rigid.velocity.y);
@@ -44,7 +44,7 @@ public class CharacterMovement : NetworkBehaviour
             }).AddTo(gameObject);
         
         _playerObservable.HorizontalInput
-            .Where(horizontal => horizontal > 0)
+            .Where(horizontal => horizontal > 0 && !_playerObservable.isAttacking)
             .Subscribe(horizontal => {
                 _playerObservable.AnimNeedPlay.OnNext(WALK);
                 _rigid.velocity = new Vector2(horizontal * _speed, _rigid.velocity.y);
